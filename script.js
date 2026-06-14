@@ -69,6 +69,15 @@ const defaultProperties = [
   }
 ];
 
+const fallbackImage = "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1400&q=80";
+
+function normalizeImageSource(value) {
+  const trimmed = String(value || "").trim();
+  if (!trimmed) return fallbackImage;
+  if (/^(https?:\/\/|data:|blob:)/i.test(trimmed)) return trimmed;
+  return trimmed;
+}
+
 let properties = [];
 
 function loadProperties() {
@@ -108,8 +117,9 @@ function renderListings() {
     const card = document.createElement("a");
     card.className = "property-card fade-up";
     card.href = `details.html?property=${property.id}`;
+    const imageSrc = normalizeImageSource(property.image);
     card.innerHTML = `
-      <img src="${property.image}" alt="${property.title}" />
+      <img src="${imageSrc}" alt="${property.title}" />
       <div class="card-content">
         <div class="card-top">
           <span class="tag">${property.type}</span>
@@ -149,8 +159,12 @@ function renderPropertyDetails() {
   locationText.textContent = property.location;
   type.textContent = property.type;
   description.textContent = property.description;
-  image.src = property.image;
+  image.src = normalizeImageSource(property.image);
   image.alt = property.title;
+  image.onerror = () => {
+    image.src = fallbackImage;
+    image.onerror = null;
+  };
 
   featureList.innerHTML = property.features.map((feature) => `<li>${feature}</li>`).join("");
 
@@ -266,7 +280,20 @@ function handleAdminAccess() {
 function handleAddListing() {
   const form = document.getElementById("addListingForm");
   const message = document.getElementById("adminMessage");
-  if (!form || !message) return;
+  const imageUpload = document.getElementById("imageUpload");
+  const imageUrlField = document.getElementById("imageUrlField");
+  if (!form || !message || !imageUpload || !imageUrlField) return;
+
+  imageUpload.addEventListener("change", () => {
+    const file = imageUpload.files && imageUpload.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      imageUrlField.value = typeof reader.result === "string" ? reader.result : "";
+    };
+    reader.readAsDataURL(file);
+  });
 
   form.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -277,8 +304,7 @@ function handleAddListing() {
       price: String(formData.get("price") || "").trim(),
       location: String(formData.get("location") || "").trim(),
       type: String(formData.get("type") || "").trim(),
-      image:
-        String(formData.get("image") || "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1400&q=80").trim(),
+      image: normalizeImageSource(String(formData.get("image") || "").trim()),
       description: String(formData.get("description") || "A beautifully curated property waiting for its next owner.").trim(),
       features: ["New addition", "Premium finish", "Luxury comfort"]
     };
@@ -286,6 +312,7 @@ function handleAddListing() {
     properties.unshift(newProperty);
     saveProperties();
     form.reset();
+    imageUrlField.value = "";
     renderAdminListings();
     renderListings();
     renderPropertyDetails();
