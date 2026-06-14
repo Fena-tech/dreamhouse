@@ -69,7 +69,16 @@ const defaultProperties = [
   }
 ];
 
-const fallbackImage = "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1400&q=80";
+const fallbackImage =
+  "data:image/svg+xml;charset=UTF-8," +
+  encodeURIComponent(`
+    <svg xmlns="http://www.w3.org/2000/svg" width="1400" height="900">
+      <rect width="100%" height="100%" fill="#071320" />
+      <rect x="70" y="70" width="1260" height="760" rx="36" fill="#0f233c" />
+      <path d="M240 610 L440 370 L600 530 L760 280 L1080 610 Z" fill="#5cc8ff" fill-opacity="0.8" />
+      <text x="700" y="730" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="44" fill="#f5f7ff">DreamHomes Botswana</text>
+    </svg>
+  `);
 
 function normalizeImageSource(value) {
   const trimmed = String(value || "").trim();
@@ -130,6 +139,14 @@ function renderListings() {
         <p class="summary">${property.description}</p>
       </div>
     `;
+    const cardImage = card.querySelector("img");
+    if (cardImage) {
+      cardImage.onerror = () => {
+        cardImage.src = fallbackImage;
+        cardImage.onerror = null;
+      };
+    }
+
     if (index === 0) card.classList.add("fade-up");
     grid.appendChild(card);
   });
