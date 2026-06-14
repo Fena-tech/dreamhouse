@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin | DreamHomes Botswana</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="page admin-page">
+    <div class="site-glow glow-one"></div>
+    <div class="site-glow glow-two"></div>
+
+    <header class="topbar">
+      <a class="brand" href="index.html">DreamHomes Botswana</a>
+      <nav class="nav-links">
+        <a href="index.html">Listings</a>
+        <a href="booking.html">Book Viewing</a>
+        <a href="admin.html" class="active">Admin</a>
+      </nav>
+    </header>
+
+    <main class="admin-shell">
+      <section id="adminLoginCard" class="admin-card fade-up">
+        <div class="admin-intro">
+          <p class="eyebrow">Owner access</p>
+          <h1>Enter Admin Dashboard</h1>
+          <p>Use the owner password to access listing management.</p>
+        </div>
+
+        <form id="adminLoginForm" class="admin-form">
+          <label>
+            Password
+            <input type="password" id="adminPassword" placeholder="Enter password" required />
+          </label>
+          <button type="submit" class="btn btn-primary">Access Dashboard</button>
+          <p class="form-note">Default password: owner2026</p>
+          <p id="loginMessage" class="form-message"></p>
+        </form>
+      </section>
+
+      <div id="adminProtectedContent" hidden>
+        <section class="admin-card fade-up">
+          <div class="admin-intro">
+            <p class="eyebrow">Dashboard</p>
+            <h1>Manage Listings</h1>
+            <p>Add new homes, update prices, or remove listings instantly.</p>
+          </div>
+
+          <form id="addListingForm" class="admin-form">
+            <div class="form-grid">
+              <label>
+                Property name
+                <input type="text" name="title" placeholder="Luxury Residence" required />
+              </label>
+              <label>
+                Location
+                <input type="text" name="location" placeholder="Gaborone, Botswana" required />
+              </label>
+              <label>
+                Price (BWP)
+                <input type="text" name="price" placeholder="P 4,500,000" required />
+              </label>
+              <label>
+                Property type
+                <input type="text" name="type" placeholder="Luxury Villa" required />
+              </label>
+            </div>
+            <label>
+              Image URL
+              <input type="url" name="image" placeholder="https://example.com/house.jpg" />
+            </label>
+            <label>
+              Description
+              <textarea name="description" rows="4" placeholder="Tell us about the home"></textarea>
+            </label>
+            <button type="submit" class="btn btn-primary">Add Listing</button>
+            <p id="adminMessage" class="form-message"></p>
+          </form>
+        </section>
+
+        <section class="admin-listings fade-up">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Live inventory</p>
+              <h2>Current Listings</h2>
+            </div>
+          </div>
+          <div id="adminListings" class="admin-list-grid"></div>
+        </section>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <p>© 2026 DreamHomes Botswana. Premium property experiences, refined.</p>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>

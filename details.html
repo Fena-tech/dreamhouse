@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Property Details | DreamHomes Botswana</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="page detail-page">
+    <div class="site-glow glow-one"></div>
+    <div class="site-glow glow-two"></div>
+
+    <header class="topbar">
+      <a class="brand" href="index.html">DreamHomes Botswana</a>
+      <nav class="nav-links">
+        <a href="index.html">Listings</a>
+        <a href="booking.html">Book Viewing</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="detail-hero fade-up">
+        <img id="detailImage" src="" alt="Property preview" />
+        <div class="detail-hero-overlay">
+          <p class="eyebrow">Signature listing</p>
+          <h1 id="detailTitle">Property Name</h1>
+          <p id="detailLocation">Location</p>
+        </div>
+      </section>
+
+      <section class="detail-content">
+        <div class="detail-info fade-up">
+          <div class="detail-price-row">
+            <div>
+              <p class="eyebrow">Price</p>
+              <h2 id="detailPrice">P 0</h2>
+            </div>
+            <span class="status-pill">Available Now</span>
+          </div>
+
+          <div class="info-grid">
+            <article class="info-card">
+              <h3>Location</h3>
+              <p id="detailLocationText">—</p>
+            </article>
+            <article class="info-card">
+              <h3>Property Type</h3>
+              <p id="detailType">—</p>
+            </article>
+          </div>
+
+          <article class="info-card wide-card">
+            <h3>Property Story</h3>
+            <p id="detailDescription"></p>
+          </article>
+
+          <article class="info-card wide-card">
+            <h3>Signature Features</h3>
+            <ul id="featureList" class="feature-list"></ul>
+          </article>
+        </div>
+
+        <aside class="detail-actions fade-up">
+          <div class="action-card">
+            <h3>Schedule your visit</h3>
+            <p>
+              Work with our specialists to arrange a private viewing and receive a
+              tailored walkthrough of the property.
+            </p>
+            <div class="action-buttons">
+              <a id="bookButton" class="btn btn-primary" href="booking.html">Book Viewing</a>
+              <a id="inquiryButton" class="btn btn-secondary" href="booking.html?inquiry=1">Send Inquiry</a>
+            </div>
+          </div>
+        </aside>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>© 2026 DreamHomes Botswana. Premium property experiences, refined.</p>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>

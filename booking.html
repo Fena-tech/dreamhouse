@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Book Viewing | DreamHomes Botswana</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="page booking-page">
+    <div class="site-glow glow-one"></div>
+    <div class="site-glow glow-two"></div>
+
+    <header class="topbar">
+      <a class="brand" href="index.html">DreamHomes Botswana</a>
+      <nav class="nav-links">
+        <a href="index.html">Listings</a>
+        <a href="booking.html" class="active">Book Viewing</a>
+      </nav>
+    </header>
+
+    <main class="booking-shell">
+      <section class="booking-card fade-up">
+        <div class="booking-intro">
+          <p class="eyebrow">Private appointments</p>
+          <h1>Reserve Your Viewing</h1>
+          <p>
+            Share your details and we’ll arrange a tailored experience around your
+            preferred schedule.
+          </p>
+          <div id="selectedPropertyNote" class="selected-property-note"></div>
+        </div>
+
+        <form id="inquiryForm" class="booking-form">
+          <label>
+            Full name
+            <input type="text" name="name" placeholder="Alicia Molefe" required />
+          </label>
+
+          <label>
+            Email address
+            <input type="email" name="email" placeholder="you@example.com" required />
+          </label>
+
+          <label>
+            Preferred viewing date
+            <input type="date" name="date" required />
+          </label>
+
+          <label>
+            Message / inquiry
+            <textarea
+              name="message"
+              rows="5"
+              placeholder="Tell us what you’d like to know about the home."
+              required
+            ></textarea>
+          </label>
+
+          <button type="submit" class="btn btn-primary full-width">Submit Inquiry</button>
+          <p class="form-note">We respond within 24 hours.</p>
+          <p id="formMessage" class="form-message" aria-live="polite"></p>
+        </form>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>© 2026 DreamHomes Botswana. Premium property experiences, refined.</p>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
