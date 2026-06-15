@@ -9,6 +9,20 @@
   --accent-strong: #6f7cff;
   --border: rgba(255, 255, 255, 0.1);
   --shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+}
+
+body.theme-gold {
+  --bg: #140d05;
+  --bg-soft: rgba(53, 34, 11, 0.9);
+  --panel: rgba(31, 20, 8, 0.95);
+  --panel-strong: rgba(49, 31, 11, 0.98);
+  --text: #fff7e9;
+  --muted: #e0c07f;
+  --accent: #e0b75e;
+  --accent-strong: #ffb347;
+  --border: rgba(255, 214, 138, 0.18);
+  --shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+}
   --radius-xl: 28px;
   --radius-lg: 20px;
   --radius-md: 14px;
@@ -306,6 +320,51 @@ a {
   text-align: center;
 }
 
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(2, 8, 23, 0.74);
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  z-index: 2000;
+}
+
+.modal-card {
+  width: min(100%, 420px);
+  background: var(--panel-strong);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  box-shadow: var(--shadow);
+  padding: 1.4rem;
+}
+
+.modal-card h3 {
+  margin: 0 0 0.4rem;
+  font-size: 1.2rem;
+}
+
+.modal-card p {
+  margin: 0 0 0.8rem;
+  color: var(--muted);
+}
+
+.modal-card input {
+  width: 100%;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text);
+  border-radius: 14px;
+  padding: 0.85rem 1rem;
+  margin-bottom: 1rem;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
 .detail-hero {
   padding: 0 5vw 2rem;
 }
@@ -406,7 +465,8 @@ a {
   margin-top: 1rem;
 }
 
-.booking-shell {
+.booking-shell,
+.contact-shell {
   min-height: calc(100vh - 10rem);
   display: grid;
   place-items: center;
@@ -479,7 +539,8 @@ a {
   background: rgba(255, 255, 255, 0.06);
 }
 
-.booking-card {
+.booking-card,
+.contact-card {
   display: grid;
   grid-template-columns: 0.95fr 1.05fr;
   gap: 1.4rem;

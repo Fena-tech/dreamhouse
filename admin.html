@@ -20,7 +20,7 @@
       <a class="brand" href="index.html">DreamHomes Botswana</a>
       <nav class="nav-links">
         <a href="index.html">Listings</a>
-        <a href="booking.html">Book Viewing</a>
+        <a href="contact.html">Contact</a>
         <a href="admin.html" class="active">Admin</a>
       </nav>
     </header>
@@ -80,11 +80,53 @@
               <input type="file" id="imageUpload" accept="image/*" />
             </label>
             <label>
+              Status
+              <select name="status">
+                <option value="Available">Available</option>
+                <option value="Sold">Sold</option>
+                <option value="Under Offer">Under Offer</option>
+              </select>
+            </label>
+            <label>
               Description
               <textarea name="description" rows="4" placeholder="Tell us about the home"></textarea>
             </label>
             <button type="submit" class="btn btn-primary">Add Listing</button>
             <p id="adminMessage" class="form-message"></p>
+          </form>
+        </section>
+
+        <section class="admin-card fade-up">
+          <div class="admin-intro">
+            <p class="eyebrow">Studio settings</p>
+            <h2>Brand & Contact</h2>
+            <p>Update the site’s contact details and choose the visual theme.</p>
+          </div>
+
+          <form id="siteSettingsForm" class="admin-form">
+            <div class="form-grid">
+              <label>
+                Phone number
+                <input type="text" name="phone" id="sitePhoneInput" placeholder="+267 71 234 567" />
+              </label>
+              <label>
+                Email
+                <input type="email" name="email" id="siteEmailInput" placeholder="hello@dreamhomesbw.com" />
+              </label>
+            </div>
+            <label>
+              Social media
+              <input type="text" name="social" id="siteSocialInput" placeholder="Instagram @dreamhomesbw" />
+            </label>
+            <label>
+              Theme
+              <select name="theme" id="siteThemeInput">
+                <option value="dark">Dark Luxury</option>
+                <option value="gold">Gold Glow</option>
+              </select>
+            </label>
+            <button type="submit" class="btn btn-primary">Save Settings</button>
+            <p id="settingsMessage" class="form-message"></p>
           </form>
         </section>
 

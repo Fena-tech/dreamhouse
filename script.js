@@ -1,3 +1,10 @@
+const defaultSettings = {
+  phone: "+267 71 234 567",
+  email: "hello@dreamhomesbw.com",
+  social: "Instagram @dreamhomesbw",
+  theme: "gold"
+};
+
 const defaultProperties = [
   {
     id: 1,
@@ -14,7 +21,8 @@ const defaultProperties = [
       "Infinity-edge pool and cabana",
       "Smart home automation",
       "Solar-ready roof and backup power"
-    ]
+    ],
+    status: "Available"
   },
   {
     id: 2,
@@ -31,7 +39,8 @@ const defaultProperties = [
       "Private dock access",
       "Three-car garage",
       "Integrated solar energy system"
-    ]
+    ],
+    status: "Under Offer"
   },
   {
     id: 3,
@@ -48,7 +57,8 @@ const defaultProperties = [
       "Outdoor dining pavilion",
       "Bespoke cabinetry",
       "Rainwater harvesting"
-    ]
+    ],
+    status: "Available"
   },
   {
     id: 4,
@@ -65,7 +75,8 @@ const defaultProperties = [
       "Designer kitchen",
       "Home cinema",
       "High-efficiency climate control"
-    ]
+    ],
+    status: "Sold"
   }
 ];
 
@@ -105,6 +116,23 @@ function saveProperties() {
   localStorage.setItem("dreamhomesProperties", JSON.stringify(properties));
 }
 
+function loadSettings() {
+  try {
+    const stored = localStorage.getItem("dreamhomesSettings");
+    if (!stored) return defaultSettings;
+    const parsed = JSON.parse(stored);
+    return { ...defaultSettings, ...parsed, theme: defaultSettings.theme };
+  } catch (error) {
+    console.warn("Could not load settings", error);
+    return defaultSettings;
+  }
+}
+
+function saveSettings(settings) {
+  localStorage.setItem("dreamhomesSettings", JSON.stringify(settings));
+}
+
+let settings = loadSettings();
 properties = loadProperties();
 
 function getPropertyFromUrl() {
@@ -134,6 +162,7 @@ function renderListings() {
           <span class="tag">${property.type}</span>
           <span class="price">${property.price}</span>
         </div>
+        <span class="tag status-badge">${property.status || "Available"}</span>
         <h3>${property.title}</h3>
         <p class="location">${property.location}</p>
         <p class="summary">${property.description}</p>
@@ -173,6 +202,10 @@ function renderPropertyDetails() {
   title.textContent = property.title;
   location.textContent = property.location;
   price.textContent = property.price;
+  const statusLabel = document.getElementById("detailStatus");
+  if (statusLabel) {
+    statusLabel.textContent = property.status || "Available";
+  }
   locationText.textContent = property.location;
   type.textContent = property.type;
   description.textContent = property.description;
@@ -185,9 +218,10 @@ function renderPropertyDetails() {
 
   featureList.innerHTML = property.features.map((feature) => `<li>${feature}</li>`).join("");
 
-  const propertyQuery = `?property=${property.id}`;
-  bookButton.href = `booking.html${propertyQuery}`;
-  inquiryButton.href = `booking.html${propertyQuery}&inquiry=1`;
+  bookButton.href = "contact.html";
+  inquiryButton.href = "contact.html";
+  bookButton.textContent = "Contact Us";
+  inquiryButton.textContent = "Request Details";
 }
 
 function handleBookingForm() {
@@ -210,6 +244,63 @@ function handleBookingForm() {
   });
 }
 
+function openAdminPrompt({ title, description, defaultValue, onSubmit }) {
+  const backdrop = document.createElement("div");
+  backdrop.className = "modal-backdrop";
+
+  const card = document.createElement("div");
+  card.className = "modal-card";
+
+  const heading = document.createElement("h3");
+  heading.textContent = title;
+
+  const paragraph = document.createElement("p");
+  paragraph.textContent = description;
+
+  const input = document.createElement("input");
+  input.type = "text";
+  input.value = defaultValue || "";
+
+  const actions = document.createElement("div");
+  actions.className = "modal-actions";
+
+  const cancelButton = document.createElement("button");
+  cancelButton.type = "button";
+  cancelButton.className = "btn btn-secondary";
+  cancelButton.textContent = "Cancel";
+
+  const confirmButton = document.createElement("button");
+  confirmButton.type = "button";
+  confirmButton.className = "btn btn-primary";
+  confirmButton.textContent = "Save";
+
+  const closeModal = () => backdrop.remove();
+  cancelButton.addEventListener("click", closeModal);
+  backdrop.addEventListener("click", (event) => {
+    if (event.target === backdrop) closeModal();
+  });
+
+  confirmButton.addEventListener("click", () => {
+    const value = input.value.trim();
+    closeModal();
+    onSubmit(value);
+  });
+
+  input.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      confirmButton.click();
+    }
+  });
+
+  actions.append(cancelButton, confirmButton);
+  card.append(heading, paragraph, input, actions);
+  backdrop.appendChild(card);
+  document.body.appendChild(backdrop);
+  input.focus();
+  input.select();
+}
+
 function renderAdminListings() {
   const container = document.getElementById("adminListings");
   if (!container) return;
@@ -221,8 +312,10 @@ function renderAdminListings() {
           <div>
             <h3>${property.title}</h3>
             <p>${property.location} • ${property.price}</p>
+            <p>Status: ${property.status || "Available"}</p>
           </div>
           <div class="admin-actions">
+            <button class="btn btn-secondary" data-action="status" data-id="${property.id}">Change Status</button>
             <button class="btn btn-secondary" data-action="price" data-id="${property.id}">Change Price</button>
             <button class="btn btn-secondary" data-action="remove" data-id="${property.id}">Remove</button>
           </div>
@@ -243,18 +336,40 @@ function renderAdminListings() {
         renderPropertyDetails();
         const message = document.getElementById("adminMessage");
         if (message) message.textContent = "Listing removed.";
+      } else if (action === "status") {
+        const property = properties.find((item) => item.id === id);
+        openAdminPrompt({
+          title: "Update Status",
+          description: "Enter the new status for this listing.",
+          defaultValue: property?.status || "Available",
+          onSubmit: (nextStatus) => {
+            if (!nextStatus) return;
+            property.status = nextStatus;
+            saveProperties();
+            renderAdminListings();
+            renderListings();
+            renderPropertyDetails();
+            const message = document.getElementById("adminMessage");
+            if (message) message.textContent = "Status updated.";
+          }
+        });
       } else if (action === "price") {
         const property = properties.find((item) => item.id === id);
-        const nextPrice = window.prompt("Enter the new price for this listing", property?.price || "");
-        if (nextPrice) {
-          property.price = nextPrice;
-          saveProperties();
-          renderAdminListings();
-          renderListings();
-          renderPropertyDetails();
-          const message = document.getElementById("adminMessage");
-          if (message) message.textContent = "Price updated.";
-        }
+        openAdminPrompt({
+          title: "Update Price",
+          description: "Enter the new price for this listing.",
+          defaultValue: property?.price || "",
+          onSubmit: (nextPrice) => {
+            if (!nextPrice) return;
+            property.price = nextPrice;
+            saveProperties();
+            renderAdminListings();
+            renderListings();
+            renderPropertyDetails();
+            const message = document.getElementById("adminMessage");
+            if (message) message.textContent = "Price updated.";
+          }
+        });
       }
     });
   });
@@ -323,7 +438,8 @@ function handleAddListing() {
       type: String(formData.get("type") || "").trim(),
       image: normalizeImageSource(String(formData.get("image") || "").trim()),
       description: String(formData.get("description") || "A beautifully curated property waiting for its next owner.").trim(),
-      features: ["New addition", "Premium finish", "Luxury comfort"]
+      features: ["New addition", "Premium finish", "Luxury comfort"],
+      status: String(formData.get("status") || "Available").trim()
     };
 
     properties.unshift(newProperty);
@@ -334,6 +450,52 @@ function handleAddListing() {
     renderListings();
     renderPropertyDetails();
     message.textContent = "New listing added successfully.";
+  });
+}
+
+function applyTheme() {
+  document.body.classList.remove("theme-gold");
+  if (settings.theme === "gold") {
+    document.body.classList.add("theme-gold");
+  }
+}
+
+function renderContactPage() {
+  const phone = document.getElementById("contactPhone");
+  const email = document.getElementById("contactEmail");
+  const social = document.getElementById("contactSocial");
+
+  if (phone) phone.textContent = settings.phone;
+  if (email) email.textContent = settings.email;
+  if (social) social.textContent = settings.social;
+}
+
+function handleSiteSettings() {
+  const form = document.getElementById("siteSettingsForm");
+  const message = document.getElementById("settingsMessage");
+  const phoneInput = document.getElementById("sitePhoneInput");
+  const emailInput = document.getElementById("siteEmailInput");
+  const socialInput = document.getElementById("siteSocialInput");
+  const themeInput = document.getElementById("siteThemeInput");
+  if (!form || !message || !phoneInput || !emailInput || !socialInput || !themeInput) return;
+
+  phoneInput.value = settings.phone;
+  emailInput.value = settings.email;
+  socialInput.value = settings.social;
+  themeInput.value = settings.theme;
+
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    settings = {
+      phone: phoneInput.value.trim() || defaultSettings.phone,
+      email: emailInput.value.trim() || defaultSettings.email,
+      social: socialInput.value.trim() || defaultSettings.social,
+      theme: themeInput.value || defaultSettings.theme
+    };
+    saveSettings(settings);
+    applyTheme();
+    renderContactPage();
+    message.textContent = "Settings updated.";
   });
 }
 
@@ -359,6 +521,7 @@ window.addEventListener("storage", (event) => {
 });
 
 window.addEventListener("DOMContentLoaded", () => {
+  applyTheme();
   initializeNavigation();
   renderListings();
   renderPropertyDetails();
@@ -366,4 +529,6 @@ window.addEventListener("DOMContentLoaded", () => {
   handleAdminAccess();
   renderAdminListings();
   handleAddListing();
+  handleSiteSettings();
+  renderContactPage();
 });
